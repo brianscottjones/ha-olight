@@ -3,9 +3,9 @@
   "name": "Olight for Home Assistant (unofficial)",
   "version": "0.2.0",
   "config_flow": true,
-  "documentation": "https://github.com/Playcolors-co/ha-olight",
-  "issue_tracker": "https://github.com/Playcolors-co/ha-olight/issues",
-  "codeowners": ["@TheBoxCoder"],
+  "documentation": "https://github.com/brianscottjones/ha-olight",
+  "issue_tracker": "https://github.com/brianscottjones/ha-olight/issues",
+  "codeowners": ["@brianscottjones"],
   "requirements": ["tinytuya==1.21.1"],
   "iot_class": "local_polling",
   "integration_type": "device"
