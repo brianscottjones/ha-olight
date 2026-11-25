@@ -10,13 +10,15 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import OlightConfigEntry
-from .const import DP_PAUSE_WINDOW
+from .const import CONF_ENABLE_CONTROLS, DP_PAUSE_WINDOW
 from .entity import OlightEntity
 from .protocol import decode_pause_window, encode_pause_window
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: OlightConfigEntry,
                             add: AddEntitiesCallback) -> None:
+    if not entry.options.get(CONF_ENABLE_CONTROLS, False):
+        return
     c = entry.runtime_data
     add([
         OlightPauseTime(c, entry, "pause_start", "Quiet hours start", 0),

@@ -13,6 +13,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry, async_
 from custom_components.olight.tuya_client import HEARTBEAT_INTERVAL
 from custom_components.olight.const import (
     CONF_DEVICE_ID,
+    CONF_ENABLE_CONTROLS,
     CONF_LOCAL_KEY,
     CONF_MODEL,
     DOMAIN,
@@ -27,11 +28,26 @@ async def _setup(hass: HomeAssistant) -> MockConfigEntry:
         domain=DOMAIN, unique_id=DEVICE_ID, title="Ostation 2 Pro",
         data={CONF_HOST: HOST, CONF_DEVICE_ID: DEVICE_ID, CONF_LOCAL_KEY: LOCAL_KEY,
               CONF_MODEL: "Ostation 2 Pro"},
+        options={CONF_ENABLE_CONTROLS: True},
     )
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     return entry
+
+
+async def test_write_entities_are_disabled_by_default(hass: HomeAssistant, fake_station) -> None:
+    entry = MockConfigEntry(
+        domain=DOMAIN, unique_id=DEVICE_ID, title="Ostation 2 Pro",
+        data={CONF_HOST: HOST, CONF_DEVICE_ID: DEVICE_ID, CONF_LOCAL_KEY: LOCAL_KEY,
+              CONF_MODEL: "Ostation 2 Pro"},
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get("switch.ostation_2_pro_charging") is None
+    assert hass.states.get("number.ostation_2_pro_wake_sensitivity") is None
+    assert hass.states.get("time.ostation_2_pro_quiet_hours_start") is None
 
 
 async def test_station_and_four_bays_are_registered_as_devices(

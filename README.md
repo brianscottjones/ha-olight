@@ -78,6 +78,14 @@ way — this only affects how you obtain the key the first time.
 See **[docs/REVERSE-ENGINEERING.md](docs/REVERSE-ENGINEERING.md)** for how all of this was
 established (the app is a Tuya app, the key is cloud-issued and pinned, etc.).
 
+## Safety posture in the Brian Jones fork
+
+This fork defaults to **read-only entities**. Installing the integration creates sensors and binary sensors, but does not expose entities that can change charging behavior. The write-capable charging switch, quiet-hours controls, and wake-sensitivity control can be enabled explicitly from the integration's **Configure** menu by turning on **Enable write controls**.
+
+The integration communicates with the station over the local network only. The `tinytuya` runtime dependency is pinned to an exact reviewed version in `manifest.json`; dependency updates should be deliberate and tested before installation. The optional key-extraction helpers in `tools/` are development/setup utilities and are not part of the Home Assistant runtime package.
+
+Fork source: https://github.com/brianscottjones/ha-olight
+
 ## Install
 
 **HACS** → Custom repositories → add `https://github.com/Playcolors-co/ha-olight` as an

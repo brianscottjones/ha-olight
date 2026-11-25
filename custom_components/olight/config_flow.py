@@ -16,11 +16,18 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_DEVICE_ID, CONF_LOCAL_KEY, CONF_MODEL, DEFAULT_MODEL, DOMAIN
+from .const import (
+    CONF_DEVICE_ID,
+    CONF_ENABLE_CONTROLS,
+    CONF_LOCAL_KEY,
+    CONF_MODEL,
+    DEFAULT_MODEL,
+    DOMAIN,
+)
 from .tuya_client import OstationClient, OstationError
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,6 +48,10 @@ _SCHEMA = vol.Schema({
 _RECONFIGURE_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): str,
     vol.Required(CONF_LOCAL_KEY): str,
+})
+
+_OPTIONS_SCHEMA = vol.Schema({
+    vol.Required(CONF_ENABLE_CONTROLS, default=False): bool,
 })
 
 
@@ -71,6 +82,10 @@ class OlightConfigFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    @staticmethod
+    def async_get_options_flow(config_entry):
+        return OlightOptionsFlow()
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -96,6 +111,7 @@ class OlightConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_LOCAL_KEY: local_key,
                         CONF_MODEL: DEFAULT_MODEL,
                     },
+                    options={CONF_ENABLE_CONTROLS: False},
                 )
 
         return self.async_show_form(
@@ -133,4 +149,20 @@ class OlightConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=self.add_suggested_values_to_schema(_RECONFIGURE_SCHEMA, suggested),
             errors=errors,
             description_placeholders={"device_id": device_id},
+        )
+
+
+class OlightOptionsFlow(OptionsFlow):
+    """Keep write-capable entities opt-in after installation."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(
+                _OPTIONS_SCHEMA,
+                {CONF_ENABLE_CONTROLS: self.config_entry.options.get(CONF_ENABLE_CONTROLS, False)},
+            ),
         )

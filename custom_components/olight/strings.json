@@ -18,6 +18,13 @@
           "host": "IP address",
           "local_key": "Local key"
         }
+      },
+      "init": {
+        "title": "Ostation safety options",
+        "description": "Controls that can change charging behavior are disabled by default. Enable them only if you want Home Assistant to write to the station.",
+        "data": {
+          "enable_controls": "Enable write controls"
+        }
       }
     },
     "error": {

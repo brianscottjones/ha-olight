@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.olight.const import CONF_DEVICE_ID, CONF_LOCAL_KEY, DOMAIN
+from custom_components.olight.const import CONF_DEVICE_ID, CONF_ENABLE_CONTROLS, CONF_LOCAL_KEY, DOMAIN
 
 from .conftest import DEVICE_ID, HOST, LOCAL_KEY
 
@@ -33,6 +33,7 @@ async def test_user_flow_creates_entry(hass: HomeAssistant, fake_station) -> Non
     assert result["data"][CONF_DEVICE_ID] == DEVICE_ID
     assert result["data"][CONF_LOCAL_KEY] == LOCAL_KEY
     assert result["data"][CONF_HOST] == HOST
+    assert result["options"][CONF_ENABLE_CONTROLS] is False
     # The validation connection must be closed before the coordinator opens the real one:
     # the station allows a single client, so a leaked probe socket would block it.
     assert fake_station.instances[0].closed is True

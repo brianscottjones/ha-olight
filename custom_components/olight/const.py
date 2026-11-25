@@ -8,6 +8,7 @@ CONF_DEVICE_ID = "device_id"
 CONF_LOCAL_KEY = "local_key"
 CONF_HOST = "host"
 CONF_MODEL = "model"
+CONF_ENABLE_CONTROLS = "enable_controls"
 
 # Tuya datapoints. Confirmed against real Ostation 2 / 2 Pro units (Tuya product ids seen in the
 # wild: 1fnensm6, v8znljza, rcj4z3pdmhkzflio) and the upstream tuya-local config.

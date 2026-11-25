@@ -8,13 +8,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import OlightConfigEntry
-from .const import DP_WAKE_SENSITIVITY, WAKE_SENSITIVITY_MAX, WAKE_SENSITIVITY_MIN
+from .const import CONF_ENABLE_CONTROLS, DP_WAKE_SENSITIVITY, WAKE_SENSITIVITY_MAX, WAKE_SENSITIVITY_MIN
 from .entity import OlightEntity
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: OlightConfigEntry,
                             add: AddEntitiesCallback) -> None:
-    add([OlightWakeSensitivity(entry.runtime_data, entry)])
+    if entry.options.get(CONF_ENABLE_CONTROLS, False):
+        add([OlightWakeSensitivity(entry.runtime_data, entry)])
 
 
 class OlightWakeSensitivity(OlightEntity, NumberEntity):

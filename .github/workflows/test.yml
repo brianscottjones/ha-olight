@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - run: pip install ruff pytest-homeassistant-custom-component tinytuya
+      - run: pip install ruff pytest-homeassistant-custom-component tinytuya==1.21.1
       - run: python -m ruff check .
       # The decoder and client tests need no Home Assistant; the rest boot a real HA core with
       # tinytuya.Device replaced by a scripted fake, so the whole integration is exercised
